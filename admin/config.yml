@@ -1,0 +1,46 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "images"
+public_folder: "/images"
+
+collections:
+  - name: "competitions_data"
+    label: "Competitions Database"
+    files:
+      - label: "Competitions"
+        name: "competitions"
+        file: "competitions.json"
+        fields:
+          - name: "competition"
+            label: "Competition"
+            widget: "list"
+            fields:
+              - {label: "Competition ID (URL slug)", name: "id", widget: "string"}
+              - {label: "Name", name: "name", widget: "string"}
+              - {label: "Start Time", name: "startTime", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ssZ", required: false}
+              - {label: "End Time", name: "endTime", widget: "datetime", format: "YYYY-MM-DDTHH:mm:ssZ", required: false}
+              - label: "Difficulty"
+                name: "difficulty"
+                widget: "object"
+                fields:
+                  - {label: "Rows", name: "rows", widget: "number", value_type: "int"}
+                  - {label: "Columns", name: "cols", widget: "number", value_type: "int"}
+                  - {label: "Mines", name: "mines", widget: "number", value_type: "int"}
+              - label: "Powers"
+                name: "powers"
+                widget: "object"
+                fields:
+                  - label: "Force Sight"
+                    name: "forceSight"
+                    widget: "object"
+                    fields:
+                      - {label: "Enabled", name: "enabled", widget: "boolean", default: true}
+                      - {label: "Charges", name: "charges", widget: "number", value_type: "int", default: 1, required: false}
+                  - label: "Force Barrier"
+                    name: "forceBarrier"
+                    widget: "object"
+                    fields:
+                      - {label: "Enabled", name: "enabled", widget: "boolean", default: true}
+                      - {label: "Charges", name: "charges", widget: "number", value_type: "int", default: 1, required: false}

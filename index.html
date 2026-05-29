@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Embark on a Star Wars themed Minesweeper mission.">
+    <!-- OpenGraph Social Metadata -->
+    <meta property="og:title" content="Galactic Minefield - Star Wars Minesweeper">
+    <meta property="og:description" content="Embark on a Star Wars themed Minesweeper mission.">
+    <meta property="og:image" content="https://minefield.holonet.nz/social-share-preview.png">
+    <meta property="og:type" content="website">
+    <!-- Twitter Social Metadata -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Galactic Minefield - Star Wars Minesweeper">
+    <meta name="twitter:description" content="Embark on a Star Wars themed Minesweeper mission.">
+    <meta name="twitter:image" content="https://minefield.holonet.nz/social-share-preview.png">
+    <!-- Favicon Link -->
+    <link rel="icon" type="image/png" href="favicon.png">
+    <title>Galactic Minefield - Star Wars Minesweeper</title>
+    <!-- Sci-fi Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    
+    <!-- Netlify Identity Widget -->
+    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Starfield Animation -->
+    <div class="starfield">
+        <div class="stars stars-slow"></div>
+        <div class="stars stars-fast"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="app-container">
+        <header class="app-header">
+            <h1 class="glow-text">GALACTIC MINEFIELD</h1>
+            <div class="sound-control-wrapper">
+                <button id="sound-toggle-btn" class="icon-btn" title="Toggle Sound Synth" aria-label="Toggle sound">
+                    <span class="sound-icon font-icon">🔊</span>
+                    <span id="sound-status-text">AUDIO: ON</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Landing / Setup Screen -->
+        <main id="landing-screen" class="game-screen visible">
+            <div class="panel setup-panel">
+                <div class="panel-header">
+                    <h2>SECURE TRANSMISSION ESTABLISHED</h2>
+                </div>
+                <div class="panel-body">
+                    <!-- Player Name Input -->
+                    <div class="input-group">
+                        <label for="player-name">IDENTIFY OPERATIVE NAME:</label>
+                        <input type="text" id="player-name" placeholder="E.g., Luke Skywalker" autocomplete="off" maxlength="20" required>
+                        <span class="input-glow-line"></span>
+                    </div>
+
+                    <!-- Difficulty Toggles -->
+                    <div class="selector-group">
+                        <label>SELECT MISSION DIFFICULTY:</label>
+                        <div class="difficulty-selectors">
+                            <button type="button" class="diff-btn active" data-diff="recruit">
+                                <span class="diff-title">RECRUIT</span>
+                                <span class="diff-desc">9x9 Grid | 10 Mines</span>
+                            </button>
+                            <button type="button" class="diff-btn" data-diff="veteran">
+                                <span class="diff-title">VETERAN</span>
+                                <span class="diff-desc">16x16 Grid | 40 Mines</span>
+                            </button>
+                            <button type="button" class="diff-btn" data-diff="commando">
+                                <span class="diff-title">COMMANDO</span>
+                                <span class="diff-desc">24x24 Grid | 99 Mines</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Competition Status -->
+                    <div id="comp-status-container" style="text-align: center; margin-bottom: 15px; display: none;">
+                        <span id="comp-status-text" style="color: var(--sith-red); font-weight: bold; text-shadow: 0 0 5px var(--sith-red);"></span>
+                    </div>
+
+                    <!-- Launch Button -->
+                    <button id="launch-btn" class="glowing-action-btn">LAUNCH MISSION</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Gameplay Screen -->
+        <main id="gameplay-screen" class="game-screen">
+            <div class="gameplay-grid-container">
+                <!-- Left HUD Info Panel -->
+                <section class="hud-panel stat-panel">
+                    <div class="hud-header">OPERATIVE FILE</div>
+                    <div class="hud-body">
+                        <div class="hud-player-profile">
+                            <div class="profile-details">
+                                <span class="label-muted">OPERATIVE CODE:</span>
+                                <span id="hud-player-name" class="glow-text-blue">GUEST OPERATIVE</span>
+                            </div>
+                            <div class="profile-details">
+                                <span class="label-muted">MISSION:</span>
+                                <span id="hud-mission-name" class="glow-text-blue" style="word-break: break-word; line-height: 1.2;">STANDARD OPERATIONS</span>
+                            </div>
+                        </div>
+                        
+                        <div class="divider"></div>
+
+                        <div class="hud-counters">
+                            <div class="counter-box">
+                                <span class="counter-label">SECTOR TIME</span>
+                                <div id="timer-display" class="digital-readout">000</div>
+                            </div>
+                            <div class="counter-box">
+                                <span class="counter-label">MINES DETECTED</span>
+                                <div id="mine-counter-display" class="digital-readout">010</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Center Board Area -->
+                <section class="board-main-area">
+                    <div id="status-bar" class="status-bar">
+                        <span id="status-message">GRID CALIBRATED. AWAITING INITIAL SCAN DEPLOYMENT.</span>
+                        <div id="mandate-progress" class="mandate-progress-bar" style="display: none;">
+                            <div id="mandate-fill" class="mandate-progress-fill"></div>
+                        </div>
+                    </div>
+                    <div id="board-wrapper" class="board-wrapper">
+                        <!-- Minesweeper cells will be dynamically injected here -->
+                        <div id="mine-grid" class="mine-grid"></div>
+                    </div>
+                </section>
+
+                <!-- Right Action Panel -->
+                <section class="hud-panel action-panel">
+                    <div class="hud-header">TACTICAL SYSTEMS</div>
+                    <div class="hud-body">
+                        <div class="ability-card">
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <span class="ability-card-title">FORCE POWERS</span>
+                                <span style="font-family: 'Share Tech Mono', monospace; font-size: 0.7rem; color: var(--warning-yellow); letter-spacing: 0.02rem;">USAGE ADDS A 10 POINT SCORE PENALTY</span>
+                            </div>
+                            
+                            <!-- Force Sight -->
+                            <div class="ability-subcard">
+                                <span class="ability-subcard-title">FORCE SIGHT</span>
+                                <p class="ability-desc">
+                                    Reveals a 3x3 block around a targeted cell, auto-flagging any mines inside.
+                                </p>
+                                <button id="force-sight-btn" class="ability-btn">
+                                    <span class="ability-status-light"></span>
+                                    <span id="force-sight-btn-text">UNAVAILABLE</span>
+                                </button>
+                            </div>
+
+                            <div class="divider"></div>
+
+                            <!-- Force Barrier -->
+                            <div class="ability-subcard">
+                                <span class="ability-subcard-title">FORCE BARRIER (PASSIVE)</span>
+                                <p class="ability-desc">
+                                    Prevents a loss the first time you click a mine. The mine is automatically shielded and flagged.
+                                </p>
+                                <div id="force-barrier-status" class="ability-status-box offline">
+                                    <span class="ability-status-light"></span>
+                                    <span id="force-barrier-status-text">UNAVAILABLE</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="guide-card">
+                            <span class="guide-title">MISSION INSTRUCTIONS</span>
+                            <ul class="guide-list">
+                                <li><span class="key-control">Left Click</span> reveals a plating cell.</li>
+                                <li><span class="key-control">Right Click</span> flags a mine location.</li>
+                                <li><span class="key-control">Shift + Left Click</span> highlights adjacent cells and chords unflagged cells if flag count matches the cell's number.</li>
+                            </ul>
+                        </div>
+
+                        <button id="abort-btn" class="abort-btn">ABORT MISSION</button>
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <!-- Game Over Modal (Victory / Defeat Screen) -->
+        <div id="gameover-modal" class="modal-overlay">
+            <div class="modal-content report-panel">
+                <div class="report-header">
+                    <div class="report-stamp" id="report-stamp-text">TRANSMISSION COMPLETED</div>
+                    <h2>DEBRIS FIELD MISSION REPORT</h2>
+                </div>
+                <div class="report-body" id="mission-report-box">
+                    <div class="report-stats-full">
+                        <div class="report-row">
+                            <span class="rep-label">OPERATIVE:</span>
+                            <span id="report-name" class="rep-value glow-text-cyan">LUKE SKYWALKER</span>
+                        </div>
+                        <div class="report-row">
+                            <span class="rep-label">STATUS:</span>
+                            <span id="report-outcome" class="rep-value glow-text-red">FAILURE</span>
+                        </div>
+                        <div class="report-row">
+                            <span class="rep-label">TIME ELAPSED:</span>
+                            <span id="report-time" class="rep-value">45 SECONDS</span>
+                        </div>
+                        <div class="report-row">
+                            <span class="rep-label">MINES SECURED:</span>
+                            <span id="report-mines-secured" class="rep-value">8 / 10</span>
+                        </div>
+                        <div class="report-row">
+                            <span class="rep-label">DIFFICULTY RECORD:</span>
+                            <span id="report-highscore" class="rep-value">NO RECORD SET</span>
+                        </div>
+                        <div class="report-row total-score-row">
+                            <span class="rep-label">FINAL SCORE:</span>
+                            <span id="report-score" class="rep-value score-glow">125</span>
+                        </div>
+                        <p id="score-explanation" class="score-desc">
+                            Score = Time Elapsed + 1000 Failure Penalty + (Unsecured Mines * 50) (On Failure)
+                        </p>
+                    </div>
+                </div>
+                <div class="report-footer">
+                    <button id="retry-btn" class="glowing-action-btn">DEPLOY NEW MISSION</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Bundle -->
+    <script src="app.js"></script>
+    <script>
+      if (window.netlifyIdentity) {
+        window.netlifyIdentity.on("init", user => {
+          if (!user) {
+            window.netlifyIdentity.on("login", () => {
+              document.location.href = "/admin/";
+            });
+          }
+        });
+      }
+    </script>
+</body>
+</html>
