@@ -1,10 +1,30 @@
 {
   "competition": [
     {
+      "id": "cou-test-120d311b-example",
+      "name": "Example Competition",
+      "endTime": "2026-07-05T00:00:00Z",
+      "difficulty": {
+        "rows": 9,
+        "cols": 9,
+        "mines": 10
+      },
+      "powers": {
+        "forceSight": {
+          "enabled": true,
+          "charges": 1
+        },
+        "forceBarrier": {
+          "enabled": true,
+          "charges": 1
+        }
+      }
+    },
+    {
       "id": "cou-test-120d311b",
-      "name": "Clan Odan-Urr Operational Test Recruit",
+      "name": "Galactic Minefield OT&E - Recruit",
       "startTime": "2026-07-05T00:00:00Z",
-      "endTime": "2026-07-13T00:00:00Z",
+      "endTime": "2026-07-21T00:00:00Z",
       "difficulty": {
         "rows": 9,
         "cols": 9,
@@ -23,9 +43,9 @@
     },
     {
       "id": "cou-test-f1e494e1",
-      "name": "Clan Odan-Urr Operational Test Veteran",
+      "name": "Galactic Minefield OT&E - Veteran",
       "startTime": "2026-07-05T00:00:00Z",
-      "endTime": "2026-07-13T00:00:00Z",
+      "endTime": "2026-07-21T00:00:00Z",
       "difficulty": {
         "rows": 16,
         "cols": 16,
@@ -44,9 +64,9 @@
     },
     {
       "id": "cou-test-c1ed25c4",
-      "name": "Clan Odan-Urr Operational Test Commando",
+      "name": "Galactic Minefield OT&E - Commando",
       "startTime": "2026-07-05T00:00:00Z",
-      "endTime": "2026-07-13T00:00:00Z",
+      "endTime": "2026-07-21T00:00:00Z",
       "difficulty": {
         "rows": 24,
         "cols": 24,
